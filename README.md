@@ -5,7 +5,7 @@
 <p align="center">
   <img 
     width="940"
-    height="252"
+    height="231"
     src="docs/assets/img/teaser.jpg"
   >
 </p>
