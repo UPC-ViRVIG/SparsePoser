@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="{{ site.lang }}">
+
+  <!-- Head -->
+  <head>
+  {%- if page.redirect -%}
+    <meta http-equiv="refresh" content="3; url={{ site.baseurl | prepend: site.url }}/" />
+  {%- endif -%}
+  {% include head.html %}
+  <style>
+
+	.project-name{
+		margin-top:50px;
+		margin-bottom:auto;
+		margin-left:auto;
+		margin-right:auto;
+		text-align:center; /*centers horizontally*/
+	}
+	
+	.img-with-text{
+		text-align: center;
+		width: 50px;
+		height: auto;
+		padding: 0px;
+	}
+	.img-with-text img {
+		display: block;
+		margin: 0 auto;
+	}	
+	
+	.img_horizontal_container{
+		display: flex;
+		justify-content: space-evenly;
+	}
+		
+	/* Three image containers (use 25% for four, and 50% for two, etc) */
+	.column {
+	  float: left;
+	  width: 50.0%;
+	  padding: 5px;
+	}
+
+	/* Clear floats after image containers */
+	.row::after {
+	  content: "";
+	  clear: both;
+	  display: table;
+	}
+	
+	/* Responsive layout - makes the three columns stack on top of each other instead of next to each other */
+	@media screen and (max-width: 500px) {
+	  .column {
+		width: 100%;
+	  }
+	}
+	
+	.video_wrapper {
+		position: relative;
+		padding-bottom: 56.25%; /* 16:9, for an aspect ratio of 1:1 change to this value to 100% */ 
+		}
+		iframe{
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+	}
+ 
+  </style>
+  </head>
+
+  <!-- Body -->
+  <body>
+
+    <!-- Header -->
+
+
+    <!-- Content -->
+    <div class="container mt-5">
+	<header class="page-header" role="banner">
+      <h1 class="project-name"><center><b>SparsePoser: Real-time Full-body Motion Reconstruction from Sparse Data</b></center></h1>
+	  <p class="conference-name"><center>ACM Transactions on Graphics (TOG)</center><p>
+	  <br>
+      <h5 class="project-tagline"><center><a href=https://joseluisponton.com/>Jose Luis Ponton<sup>1</sup></a> &nbsp;&nbsp;
+	  <a href=https://haoranyun.com/>Haoran Yun<sup>1</sup></a> &nbsp;&nbsp;
+	  <a href=http://andreasaristidou.com/>Andreas Aristidou<sup>2,3</sup></a> &nbsp;&nbsp;
+	  <a href=https://www.cs.upc.edu/~virtual/home/index.html>Carlos Andujar<sup>1</sup></a> &nbsp;&nbsp;
+	  <a href=https://www.cs.upc.edu/~npelechano/>Nuria Pelechano<sup>1</sup></a> </center> </h5>
+      <p class="project-affiliation" style="display:inline"><center><a href=https://www.upc.edu/en><sup>1</sup> Universitat Politècnica de Catalunya</a>, Barcelona, Spain &nbsp; </center></p>
+	  <p class="project-affiliation" style="display:inline"><center><a href=https://www.ucy.ac.cy/?lang=en><sup>2</sup> University of Cyprus</a>, Nicosia, Cyprus &nbsp; </center></p>      
+	  <p class="project-affiliation" style="display:inline"><center><a href=https://www.cyens.org.cy/en-gb/><sup>3</sup> CYENS Centre of Excellence</a>, Nicosia, Cyprus &nbsp; </center></p>
+    </header>
+	<br>
+      {{ content }}
+    </div>
+
+    <!-- JavaScripts -->
+    {% include scripts/jquery.html %}
+    {% include scripts/bootstrap.html %}
+    {% include scripts/masonry.html %}
+    {% include scripts/misc.html %}
+    {% include scripts/mathjax.html %}
+    {% include scripts/analytics.html %}
+  </body>
+</html>
