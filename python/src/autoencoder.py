@@ -1,6 +1,6 @@
 import torch
 import torch.nn as nn
-import dual_quat as dquat
+import pymotion.rotations.dual_quat_torch as dquat
 from skeleton import (
     SkeletonPool,
     SkeletonUnpool,
@@ -20,7 +20,9 @@ class Autoencoder(nn.Module):
 
     def forward(self, input, offset, mean_dqs, std_dqs, denorm_offsets):
         latent = self.encoder(input)
-        output = self.decoder(latent, offset, mean_dqs, std_dqs, denorm_offsets, self.parents)
+        output = self.decoder(
+            latent, offset, mean_dqs, std_dqs, denorm_offsets, self.parents
+        )
         return latent, output
 
 
@@ -165,10 +167,7 @@ class Decoder(nn.Module):
             0, 3, 1, 2
         )
         # convert to unit dual quaternions
-        input = dquat.normalize_py(
-            input,
-            self.device,
-        )
+        input = dquat.normalize(input)
         # normalize rotations
         input = input.permute(0, 2, 3, 1).flatten(start_dim=1, end_dim=2)
         input = (input - mean_dqs.unsqueeze(-1)) / std_dqs.unsqueeze(-1)

@@ -1,7 +1,8 @@
 import torch
 import torch.nn as nn
-from forward_kinematics import fk_2
-import dual_quat as dquat
+from pymotion.ops.forward_kinematics_torch import fk
+from pymotion.ops.skeleton_torch import from_root_dual_quat
+
 
 class MSE_DQ(nn.Module):
     def __init__(self, param, parents, device) -> None:
@@ -26,17 +27,15 @@ class MSE_DQ(nn.Module):
         # Dual Quaternions MSE Loss
         loss_joints = self.mse(dqs[:, 8:, :], target_dqs[:, 8:, :])
         loss_root = self.mse(dqs[:, :8, :], target_dqs[:, :8, :])
-        return (
-            loss_root * self.param["lambda_root"]
-            + loss_joints
-        )
+        return loss_root * self.param["lambda_root"] + loss_joints
+
 
 class MSE_DQ_FK(nn.Module):
     def __init__(self, param, parents, device) -> None:
         super().__init__()
         self.mse = nn.MSELoss()
         self.param = param
-        self.parents = parents
+        self.parents = torch.Tensor(parents).long().to(device)
         self.device = device
 
         # indices without sparse input
@@ -82,50 +81,36 @@ class MSE_DQ_FK(nn.Module):
             (target_dqs.shape[0], -1, 8, target_dqs.shape[-1])
         ).permute(0, 3, 1, 2)
         # compute rotations and translations local to their parents
-        local_rot, _ = dquat.skeleton_from_dual_quat_py(dqs, self.parents, self.device)
+        _, local_rot = from_root_dual_quat(dqs, self.parents)
         local_rot[..., 0, :] = torch.tensor([1, 0, 0, 0]).to(
             self.device
         )  # no global rotation
-        local_rot = local_rot.flatten(start_dim=2, end_dim=3).permute(0, 2, 1)
-        local_rot_decoder, _ = dquat.skeleton_from_dual_quat_py(
-            dqs_decoder, self.parents, self.device
-        )
+        _, local_rot_decoder = from_root_dual_quat(dqs_decoder, self.parents)
         local_rot_decoder[..., 0, :] = torch.tensor([1, 0, 0, 0]).to(
             self.device
         )  # no global rotation
-        local_rot_decoder = local_rot_decoder.flatten(start_dim=2, end_dim=3).permute(
-            0, 2, 1
-        )
-        target_local_rot, _ = dquat.skeleton_from_dual_quat_py(
-            target_dqs, self.parents, self.device
-        )
+        _, target_local_rot = from_root_dual_quat(target_dqs, self.parents)
         target_local_rot[..., 0, :] = torch.tensor([1, 0, 0, 0]).to(
             self.device
         )  # no global rotation
-        target_local_rot = target_local_rot.flatten(start_dim=2, end_dim=3).permute(
-            0, 2, 1
-        )
         # compute final positions (root space) using standard FK
-        joint_poses, joint_rot_mat = fk_2(
+        joint_poses, joint_rot_mat = fk(
             local_rot,
-            torch.zeros((local_rot.shape[0], 3, local_rot.shape[2])),
-            self.offsets.unsqueeze(0),
+            torch.zeros((local_rot.shape[0], local_rot.shape[1], 3)),
+            self.offsets,
             self.parents,
-            self.device,
         )
-        target_joint_poses, target_joint_rot_mat = fk_2(
+        target_joint_poses, target_joint_rot_mat = fk(
             target_local_rot,
-            torch.zeros((target_local_rot.shape[0], 3, target_local_rot.shape[2])),
-            self.offsets.unsqueeze(0),
+            torch.zeros((target_local_rot.shape[0], target_local_rot.shape[1], 3)),
+            self.offsets,
             self.parents,
-            self.device,
         )
-        decoder_joint_poses, decoder_rot_mat = fk_2(
+        decoder_joint_poses, decoder_rot_mat = fk(
             local_rot_decoder,
-            torch.zeros((local_rot_decoder.shape[0], 3, local_rot_decoder.shape[2])),
-            self.offsets.unsqueeze(0),
+            torch.zeros((local_rot_decoder.shape[0], local_rot_decoder.shape[1], 3)),
+            self.offsets,
             self.parents,
-            self.device,
         )
 
         # positions

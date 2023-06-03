@@ -1,6 +1,9 @@
+import numpy as np
 import torch
 from torch.utils.data import Dataset
-import dual_quat as dquat
+import pymotion.rotations.dual_quat as dquat
+from pymotion.ops.skeleton import to_root_dual_quat
+
 
 class TrainMotionData(Dataset):
     def __init__(self, param, scale, fps, device):
@@ -32,8 +35,9 @@ class TrainMotionData(Dataset):
         frames = rotations.shape[0]
         assert frames >= self.param["window_size"]
         # create dual quaternions
-        dqs = dquat.skeleton_to_dual_quat(offsets, rotations, parents)
-        dqs = dquat.unroll(dqs)  # ensure continuity
+        fake_global_pos = np.zeros((frames, 3))
+        dqs = to_root_dual_quat(rotations, fake_global_pos, parents, offsets)
+        dqs = dquat.unroll(dqs, axis=0)  # ensure continuity
         dqs = torch.from_numpy(dqs).type(torch.float32).to(self.device)
         dqs = torch.flatten(dqs, 1, 2)
         # offsets
@@ -174,8 +178,9 @@ class TestMotionData:
         frames = rotations.shape[0]
         assert frames >= self.param["window_size"]
         # create dual quaternions
-        dqs = dquat.skeleton_to_dual_quat(offsets, rotations, parents)
-        dqs = dquat.unroll(dqs)  # ensure continuity
+        fake_global_pos = np.zeros((frames, 3))
+        dqs = to_root_dual_quat(rotations, fake_global_pos, parents, offsets)
+        dqs = dquat.unroll(dqs, axis=0)  # ensure continuity
         dqs = torch.from_numpy(dqs).type(torch.float32).to(self.device)
         dqs = torch.flatten(dqs, 1, 2)
         # offsets
@@ -249,8 +254,9 @@ class RunMotionData:
         frames = rotations.shape[0]
         assert frames >= self.param["window_size"]
         # create dual quaternions
-        dqs = dquat.skeleton_to_dual_quat(offsets, rotations, parents)
-        dqs = dquat.unroll(dqs)  # ensure continuity
+        fake_global_pos = np.zeros((frames, 3))
+        dqs = to_root_dual_quat(rotations, fake_global_pos, np.array(parents), offsets)
+        dqs = dquat.unroll(dqs, axis=0)  # ensure continuity
         dqs = torch.from_numpy(dqs).type(torch.float32).to(self.device)
         dqs = torch.flatten(dqs, 1, 2)
         # displacement
@@ -267,8 +273,8 @@ class RunMotionData:
         assert frames >= self.param["window_size"]
         global_pos = positions[:, 0, :]
         # create dual quaternions
-        dqs = dquat.rot_trans_to_dual_quat(rotations, positions)
-        dqs = dquat.unroll(dqs)  # ensure continuity
+        dqs = dquat.from_rotation_translation(rotations, positions)
+        dqs = dquat.unroll(dqs, axis=0)  # ensure continuity
         dqs = torch.from_numpy(dqs).type(torch.float32).to(self.device)
         dqs = torch.flatten(dqs, 1, 2)
         # displacement

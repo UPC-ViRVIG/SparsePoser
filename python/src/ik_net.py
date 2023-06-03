@@ -1,6 +1,6 @@
 import torch
 import torch.nn as nn
-import dual_quat as dquat
+import pymotion.rotations.dual_quat_torch as dquat
 
 
 class IK_NET(nn.Module):
@@ -285,10 +285,7 @@ class IK_NET(nn.Module):
         # change res to shape (batch_size, frames, num_joints, 8)
         res = res.reshape(res.shape[0], -1, 8, res.shape[-1]).permute(0, 3, 1, 2)
         # convert to unit dual quaternions
-        res = dquat.normalize_py(
-            res,
-            self.device,
-        )
+        res = dquat.normalize(res)
         # normalize rotations
         res = res.permute(0, 2, 3, 1).flatten(start_dim=1, end_dim=2)
         res = (res - mean_dqs[dq_out_extended].unsqueeze(-1)) / std_dqs[

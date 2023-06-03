@@ -8,7 +8,7 @@ from ik_architecture import IK_Model
 import train
 import argparse
 import numpy as np
-import dual_quat as dquat
+from pymotion.ops.skeleton import from_root_dual_quat
 from motion_data import RunMotionData
 
 HOST = "127.0.0.1"
@@ -119,7 +119,7 @@ def main(args):
                     dqs = dqs * stds["dqs"].cpu().numpy() + means["dqs"].cpu().numpy()
                     # get rotations and translations from dual quatenions
                     dqs = dqs.reshape(dqs.shape[0], -1, 8)
-                    rots, _ = dquat.skeleton_from_dual_quat(dqs, parents)
+                    _, rots = from_root_dual_quat(dqs, np.array(parents))
                     # rots (frames, joints, [w,x,y,z])
                     # convert to array of bytes
                     send_data = write_float_array(rots[0, :, :].flatten())

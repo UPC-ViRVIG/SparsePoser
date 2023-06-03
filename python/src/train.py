@@ -1,10 +1,10 @@
+import random
 import torch
 from torch.utils.data.dataloader import DataLoader
-from torch.utils.tensorboard import SummaryWriter
-from bvh import BVH
 from motion_data import TestMotionData, TrainMotionData
-import quat
-import dual_quat as dquat
+import pymotion.rotations.quat as quat
+from pymotion.ops.skeleton import from_root_dual_quat
+from pymotion.io.bvh import BVH
 import numpy as np
 from train_data import Train_Data
 from generator_architecture import Generator_Model
@@ -41,12 +41,18 @@ param = {
     ],
     "window_size": 64,
     "window_step": 16,
+    "seed": 2222,
 }
 
 assert param["kernel_size_temporal_dim"] % 2 == 1
 
 
 def main(args):
+    # Set seed
+    torch.manual_seed(param["seed"])
+    random.seed(param["seed"])
+    np.random.seed(param["seed"])
+
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     print("Using device:", device)
     # Additional Info when using cuda
@@ -109,9 +115,7 @@ def main(args):
     # Once all eval files are added, normalize
     eval_dataset.normalize()
 
-    train_dataloader = DataLoader(
-        train_dataset, param["batch_size"], shuffle=False
-    ) 
+    train_dataloader = DataLoader(train_dataset, param["batch_size"], shuffle=False)
 
     # Create Models
     train_data = Train_Data(device, param)
@@ -131,29 +135,11 @@ def main(args):
     if args.train_mode & IK != 0 and args.load:
         load_model(ik_model, ik_path, train_data, device)
 
-    # Tensorboard Writer
-    run_name = (
-        "model_"
-        + args.name
-        + "_"
-        + time.strftime("%Y%m%d-%H%M%S")
-        + "_"
-        + os.path.basename(os.path.normpath(train_eval_dir))
-    )
-    writer = SummaryWriter(
-        log_dir="runs/{}".format(run_name),
-    )
-
-    # Train Loop
     if (args.train_mode & GENERATOR == 0 or args.train_mode & IK == 0) and args.load:
         # Check previous best evaluation loss
-        results = evaluate_generator(
-            generator_model, train_data, eval_dataset
-        )
+        results = evaluate_generator(generator_model, train_data, eval_dataset)
         if args.train_mode & IK != 0:
-            results_ik = evaluate_ik(
-                ik_model, results, train_data, eval_dataset
-            )
+            results_ik = evaluate_ik(ik_model, results, train_data, eval_dataset)
             results = results_ik
         mpjpe, mpeepe = eval_save_result(
             results,
@@ -167,96 +153,90 @@ def main(args):
     else:
         best_evaluation = float("inf")
     # Training Loop
-    start_time = time.time()
-    for epoch in range(param["epochs"]):
-        avg_train_loss = 0.0
-        for step, (denorm_motion, norm_motion) in enumerate(train_dataloader):
-            # Forward
-            train_data.set_offsets(norm_motion["offsets"], denorm_motion["offsets"])
-            train_data.set_motions(
-                norm_motion["dqs"],
-                norm_motion["displacement"],
-            )
-            if args.train_mode & GENERATOR != 0:
-                generator_model.train()
-            if args.train_mode & GENERATOR != 0 or args.train_mode & IK != 0:
-                res_decoder = generator_model.forward()
-            if args.train_mode & IK != 0:
-                ik_model.train()
-                ik_model.forward(res_decoder)
-            # Loss
-            loss = 0.0
-            if args.train_mode & GENERATOR != 0:
-                loss_generator = generator_model.optimize_parameters()
-                loss = loss_generator.item()
-            if args.train_mode & IK != 0:
-                loss_ik = ik_model.optimize_parameters(res_decoder)
-                loss += loss_ik.item()
-            global_step = epoch * len(train_dataloader) + step
-            writer.add_scalar("Loss", loss, global_step)
-            avg_train_loss += loss
-            # Evaluate & Print
-            if step == len(train_dataloader) - 1:
+    with torch.autograd.set_detect_anomaly(True):
+        start_time = time.time()
+        for epoch in range(param["epochs"]):
+            avg_train_loss = 0.0
+            for step, (denorm_motion, norm_motion) in enumerate(train_dataloader):
+                # Forward
+                train_data.set_offsets(norm_motion["offsets"], denorm_motion["offsets"])
+                train_data.set_motions(
+                    norm_motion["dqs"],
+                    norm_motion["displacement"],
+                )
+                if args.train_mode & GENERATOR != 0:
+                    generator_model.train()
                 if args.train_mode & GENERATOR != 0 or args.train_mode & IK != 0:
-                    results = evaluate_generator(
-                        generator_model, train_data, eval_dataset
-                    )
-                    if args.train_mode & IK != 0:
-                        results_ik = evaluate_ik(
-                            ik_model,
+                    res_decoder = generator_model.forward()
+                if args.train_mode & IK != 0:
+                    ik_model.train()
+                    ik_model.forward(res_decoder)
+                # Loss
+                loss = 0.0
+                if args.train_mode & GENERATOR != 0:
+                    loss_generator = generator_model.optimize_parameters()
+                    loss = loss_generator.item()
+                if args.train_mode & IK != 0:
+                    loss_ik = ik_model.optimize_parameters(res_decoder)
+                    loss += loss_ik.item()
+                avg_train_loss += loss
+                # Evaluate & Print
+                if step == len(train_dataloader) - 1:
+                    if args.train_mode & GENERATOR != 0 or args.train_mode & IK != 0:
+                        results = evaluate_generator(
+                            generator_model, train_data, eval_dataset
+                        )
+                        if args.train_mode & IK != 0:
+                            results_ik = evaluate_ik(
+                                ik_model,
+                                results,
+                                train_data,
+                                eval_dataset,
+                            )
+                            results = results_ik
+                        mpjpe, mpeepe = eval_save_result(
                             results,
-                            train_data,
-                            eval_dataset,
+                            train_dataset.means,
+                            train_dataset.stds,
+                            eval_dir,
+                            device,
+                            save=False,
                         )
-                        results = results_ik
-                    mpjpe, mpeepe = eval_save_result(
-                        results,
-                        train_dataset.means,
-                        train_dataset.stds,
-                        eval_dir,
-                        device,
-                        save=False,
-                    )
-                    evaluation_loss = mpjpe + mpeepe
-                writer.add_scalar("Eval Loss", evaluation_loss, global_step)
-                # If best, save model
-                was_best = False
-                if evaluation_loss < best_evaluation:
-                    save_model(
-                        generator_model if args.train_mode & GENERATOR != 0 else None,
-                        ik_model if args.train_mode & IK != 0 else None,
-                        train_dataset,
-                        args.name,
-                        train_eval_dir,
-                    )
-                    best_evaluation = evaluation_loss
-                    was_best = True
-                # Print
-                avg_train_loss /= len(train_dataloader)
-                if args.train_mode & GENERATOR != 0 or args.train_mode & IK != 0:
-                    print(
-                        "Epoch: {} - Train Loss: {:.4f} - Eval Loss: {:.4f} - MPJPE: {:.4f} - MPEEPE: {:.4f}".format(
-                            epoch, avg_train_loss, evaluation_loss, mpjpe, mpeepe
+                        evaluation_loss = mpjpe + mpeepe
+                    # If best, save model
+                    was_best = False
+                    if evaluation_loss < best_evaluation:
+                        save_model(
+                            generator_model
+                            if args.train_mode & GENERATOR != 0
+                            else None,
+                            ik_model if args.train_mode & IK != 0 else None,
+                            train_dataset,
+                            args.name,
+                            train_eval_dir,
                         )
-                        + ("*" if was_best else "")
-                    )
+                        best_evaluation = evaluation_loss
+                        was_best = True
+                    # Print
+                    avg_train_loss /= len(train_dataloader)
+                    if args.train_mode & GENERATOR != 0 or args.train_mode & IK != 0:
+                        print(
+                            "Epoch: {} - Train Loss: {:.4f} - Eval Loss: {:.4f} - MPJPE: {:.4f} - MPEEPE: {:.4f}".format(
+                                epoch, avg_train_loss, evaluation_loss, mpjpe, mpeepe
+                            )
+                            + ("*" if was_best else "")
+                        )
 
     end_time = time.time()
     print("Training Time:", end_time - start_time)
-    writer.flush()
-    writer.close()
 
     # Load Best Model -> Save and/or Evaluate
     if args.train_mode & GENERATOR != 0 or args.train_mode & IK != 0:
         load_model(generator_model, generator_path, train_data, device)
-        results = evaluate_generator(
-            generator_model, train_data, eval_dataset
-        )
+        results = evaluate_generator(generator_model, train_data, eval_dataset)
         if args.train_mode & IK != 0:
             load_model(ik_model, ik_path, train_data, device)
-            results_ik = evaluate_ik(
-                ik_model, results, train_data, eval_dataset
-            )
+            results_ik = evaluate_ik(ik_model, results, train_data, eval_dataset)
             results = results_ik
 
         mpjpe, mpeepe = eval_save_result(
@@ -340,7 +320,6 @@ def save_model(
     name,
     train_eval_dir,
 ):
-
     data_path, generator_path, ik_path = get_model_paths(name, train_eval_dir)
 
     if train_dataset is not None:
@@ -375,8 +354,10 @@ def get_bvh_from_disk(path, filename):
 
 
 def get_info_from_bvh(bvh):
+    rot_roder = np.tile(bvh.data["rot_order"], (bvh.data["rotations"].shape[0], 1, 1))
     rots = quat.unroll(
-        quat.from_euler(np.radians(bvh.data["rotations"]), order=bvh.data["rot_order"])
+        quat.from_euler(np.radians(bvh.data["rotations"]), order=rot_roder),
+        axis=0,
     )
     rots = quat.normalize(rots)  # make sure all quaternions are unit quaternions
     pos = bvh.data["positions"]
@@ -470,9 +451,10 @@ def result_to_bvh(res, means, stds, bvh, filename, save=True):
     dqs = dqs * stds["dqs"].cpu().numpy() + means["dqs"].cpu().numpy()
     # get rotations and translations from dual quatenions
     dqs = dqs.reshape(dqs.shape[0], -1, 8)
-    rots, _ = dquat.skeleton_from_dual_quat(dqs, bvh.data["parents"])
+    _, rots = from_root_dual_quat(dqs, np.array(bvh.data["parents"]))
     # quaternions to euler
-    rotations = np.degrees(quat.to_euler(rots, order=bvh.data["rot_order"]))
+    rot_roder = np.tile(bvh.data["rot_order"], (rots.shape[0], 1, 1))
+    rotations = np.degrees(quat.to_euler(rots, order=rot_roder))
     bvh.data["rotations"] = rotations
     # positions
     positions = bvh.data["positions"][: rotations.shape[0]]

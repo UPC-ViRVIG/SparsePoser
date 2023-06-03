@@ -36,7 +36,7 @@ class Generator_Model(nn.Module):
         # input offsets has shape (1, n_joints, 3)
         self.ae_offsets = self.static_encoder(self.data.offsets)
         # Execute Autoencoder to obtain the motion
-        self.latent = self.autoencoder(
+        self.latent, self.res_decoder = self.autoencoder(
             self.data.sparse_motion,
             self.ae_offsets,
             self.data.mean_dqs,
