@@ -1,3 +1,16 @@
+Assets/SteamVR/
+Assets/SteamVR_Input/
+Assets/SteamVR_Resources/
+Assets/StreamingAssets/
+Assets/TextMesh Pro/
+Assets/XR/
+Assets/SteamVR.meta
+Assets/SteamVR_Input.meta
+Assets/SteamVR_Resources.meta
+Assets/StreamingAssets.meta
+Assets/TextMesh Pro.meta
+Assets/XR.meta
+
 [Ll]ibrary/
 [Tt]emp/
 [Oo]bj/
