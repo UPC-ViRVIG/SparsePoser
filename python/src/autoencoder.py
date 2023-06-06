@@ -83,7 +83,7 @@ class Encoder(nn.Module):
                 )
             )
             self.convs.append(seq[-1])
-            seq.append(nn.LeakyReLU(negative_slope=0.2))  # 0.2 as the paper
+            seq.append(nn.LeakyReLU(negative_slope=0.2))
             # Append to the list of layers
             self.layers.append(nn.Sequential(*seq))
 
@@ -151,7 +151,7 @@ class Decoder(nn.Module):
             )
             self.convs.append(seq[-1])
             if i != number_layers - 1:
-                seq.append(nn.LeakyReLU(negative_slope=0.2))  # 0.2 as the paper
+                seq.append(nn.LeakyReLU(negative_slope=0.2))
             # Append to the list of layers
             self.layers.append(nn.Sequential(*seq))
 
@@ -201,7 +201,7 @@ class StaticEncoder(nn.Module):
                 )
                 layer_parents = pool.new_parents
                 seq.append(pool)
-            seq.append(nn.LeakyReLU(negative_slope=0.2))  # 0.2 as the paper
+            seq.append(nn.LeakyReLU(negative_slope=0.2))
             channels *= 2
             self.layers.append(nn.Sequential(*seq))
 

@@ -15,7 +15,6 @@ import os
 import eval_metrics
 
 scale = 1
-fps = 60
 
 # Train Modes
 GENERATOR = 1
@@ -70,8 +69,8 @@ def main(args):
     if not os.path.exists(eval_dir):
         raise ValueError("eval directory does not exist")
     eval_files = os.listdir(eval_dir)
-    train_dataset = TrainMotionData(param, scale, fps, device)
-    eval_dataset = TestMotionData(param, scale, fps, device)
+    train_dataset = TrainMotionData(param, scale, device)
+    eval_dataset = TestMotionData(param, scale, device)
     reference_parents = None  # used to make sure all bvh have the same structure
     # Train Files
     for filename in train_files:

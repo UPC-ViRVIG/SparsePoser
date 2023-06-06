@@ -123,12 +123,8 @@ class MSE_DQ_FK(nn.Module):
             joint_rot_mat[:, :, self.param["sparse_joints"][1:], :, :],
             target_joint_rot_mat[:, :, self.param["sparse_joints"][1:], :, :],
         )
-        # loss_ee = self.mse(
-        #     joint_poses[:, :, self.param["sparse_joints"][1:], :],
-        #     target_joint_poses[:, :, self.param["sparse_joints"][1:], :],
-        # )
 
-        # loss_ee_reg = self.mse(input_decoder[:, 8:, :], input_ik)
+        # regularization
         loss_ee_reg = self.mse(
             decoder_joint_poses[:, :, self.indices_no_sparse, :],
             joint_poses[:, :, self.indices_no_sparse, :],

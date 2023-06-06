@@ -6,14 +6,13 @@ from pymotion.ops.skeleton import to_root_dual_quat
 
 
 class TrainMotionData(Dataset):
-    def __init__(self, param, scale, fps, device):
+    def __init__(self, param, scale, device):
         self.motions = []
         self.norm_motions = []
         self.means_motions = []
         self.var_motions = []
         self.param = param
         self.scale = scale
-        self.fps = fps
         self.device = device
 
     def add_motion(self, offsets, global_pos, rotations, parents):
@@ -146,13 +145,12 @@ class TrainMotionData(Dataset):
 
 
 class TestMotionData:
-    def __init__(self, param, scale, fps, device):
+    def __init__(self, param, scale, device):
         self.norm_motions = []
         self.bvhs = []
         self.filenames = []
         self.param = param
         self.scale = scale
-        self.fps = fps
         self.device = device
 
     def set_means_stds(self, means, stds):

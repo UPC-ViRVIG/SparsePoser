@@ -1,5 +1,6 @@
 import torch
 
+
 class Train_Data:
     def __init__(self, device, param):
         super().__init__()
@@ -16,7 +17,7 @@ class Train_Data:
     def set_motions(self, dqs, displacement):
         # concatenate the displacement to the dqs
         self.motion = torch.cat([dqs, displacement], dim=2)
-        # swap second and third dimensions for convolutions (last row is time)
+        # swap second and third dimensions for convolutions (last row should be time)
         self.motion = self.motion.permute(0, 2, 1)
         # self.motion is tensor of shape (batch_size, n_joints*8 + 3, frames)
         # if time dimension is not multiple of 8... make it multiple of 8

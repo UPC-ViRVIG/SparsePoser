@@ -16,7 +16,7 @@ IK = 2
 def main(args):
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-    eval_dataset = TestMotionData(train.param, train.scale, train.fps, device)
+    eval_dataset = TestMotionData(train.param, train.scale, device)
 
     # Load BVH
     filename = os.path.basename(args.input_path)
@@ -54,13 +54,9 @@ def main(args):
     )
     eval_dataset.normalize()
 
-    results = train.evaluate_generator(
-        generator_model, train_data, eval_dataset
-    )
+    results = train.evaluate_generator(generator_model, train_data, eval_dataset)
     if args.eval_mode & IK != 0:
-        results_ik = train.evaluate_ik(
-            ik_model, results, train_data, eval_dataset
-        )
+        results_ik = train.evaluate_ik(ik_model, results, train_data, eval_dataset)
         results = results_ik
 
     # Save Result
@@ -98,11 +94,6 @@ if __name__ == "__main__":
         choices=["generator", "ik"],
         help="evaluation mode",
     )
-    # parser.add_argument(
-    #     "output_path",
-    #     type=str,
-    #     help="path to output .bvh file",
-    # )
     args = parser.parse_args()
     if args.eval_mode == "generator":
         args.eval_mode = GENERATOR
