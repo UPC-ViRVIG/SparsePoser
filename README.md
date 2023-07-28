@@ -67,7 +67,7 @@ The project is divided into two folders: ``SparsePoserUnity`` with the Unity pro
 
 ### BVH Evaluation
 
-1. ``python .\src\eval.py .\models\model_xsens\ .\data\xsens\eval\S01_A09_3.bvh ik
+1. ``python .\src\eval.py .\models\model_xsens\ .\data\xsens\eval\S01_A09_3.bvh ik``
 > You can try to synthesize motion from any other .bvh file in the .\data\xsens\ folder.
 
 > Change ``ik`` by ``generator`` to synthesize motion only using the generator network.
