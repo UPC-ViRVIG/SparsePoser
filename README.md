@@ -46,32 +46,50 @@ The project is divided into two folders: ``SparsePoserUnity`` with the Unity pro
 
 1. Clone the repository.
 2. ``cd SparsePoser/python/``
-3. ``python -m venv env`` (tested on Python 3.9)
-4. Active the virtual environment
+3. ``python -m venv env`` (tested on Python 3.9).
+4. Active the virtual environment.
 5. ``pip install -r requirements.txt``
 6. Install [PyTorch](https://pytorch.org/get-started/locally/)
-7. 
+7. Download the [motion dataset](https://zenodo.org/TODO) and unzip it.
+> ``python/`` folder should look like this:
+```
+└───python
+    ├───data
+    │   └───xsens
+    │       ├───eval
+    │       └───train
+    ├───env
+    ├───models 
+    │   ├───model_dancedb
+    │   └───model_xsens
+    └───src
+```
+
+### BVH Evaluation
+
+1. ``python .\src\eval.py .\models\model_xsens\ .\data\xsens\eval\S01_A09_3.bvh ik
+> You can try to synthesize motion from any other .bvh file in the .\data\xsens\ folder.
+
+> Change ``ik`` by ``generator`` to synthesize motion only using the generator network.
+2. The result will be saved in TODO
+
+### Unity Demo
 
 **Unity** (for live demo)
 
 3. Install **Unity 2021.2.13f1** (other versions may work but are not tested).
 
-### BVH Evaluation
-
-TODO...
-  - Add instructions to run the evaluation script.
-  - Add instructions structure of bvh/skeleton
-
-### Unity Demo
-
 TODO...
   - Add instructions to run the demo.
-  
+
+### Training
+
+1. [Optional] Adjust hyperparameters in ``python .\src\train.py`` param dictionary.
+2. ``python .\src\train.py .\data\xsens\ train_test all``
+> ``python .\src\train.py <train_db> <name> <generator|ik|all>
+3. The result will be saved in ``models\model_<name>_<train_db>
+
 ## Data
-
-TODO...
-
-## Training
 
 TODO...
 
