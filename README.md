@@ -44,12 +44,15 @@ The project is divided into two folders: ``SparsePoserUnity`` with the Unity pro
 
 ## Quick Start
 
-**Python**
-
 1. Clone the repository.
-2. TODO... data
+2. ``cd SparsePoser/python/``
+3. ``python -m venv env`` (tested on Python 3.9)
+4. Active the virtual environment
+5. ``pip install -r requirements.txt``
+6. Install [PyTorch](https://pytorch.org/get-started/locally/)
+7. 
 
-**Unity** (skip if you only want to evaluate the network)
+**Unity** (for live demo)
 
 3. Install **Unity 2021.2.13f1** (other versions may work but are not tested).
 
