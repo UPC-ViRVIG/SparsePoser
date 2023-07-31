@@ -87,6 +87,8 @@ At this stage, your `python/` directory should be organized as follows:
 3. Import SteamVR from the Asset Store using the following link: [SteamVR Plugin](https://assetstore.unity.com/packages/tools/integration/steamvr-plugin-32647).
     > Unity should configure the project for VR use and install OpenVR during the import of SteamVR. Any previously encountered errors should be resolved at this stage and the console should be clear.
 
+4. [Only VR] Within Unity, navigate to ``Edit/Project Settings/XR Plug-in Management`` and select ``OpenVR Loader`` from the ``Plug-in Providers`` list. Navigate to ``Edit/Project Settings/XR Plug-in Management/OpenVR`` and change the ``Stereo Rendering Mode`` from ``Single-Pass Instanced`` to ``Multi Pass``.
+
 **Running the Simulator**
 
 1. Within the ``Project Window``, navigate to ``Assets/Scenes/SampleSceneSimulator``.
