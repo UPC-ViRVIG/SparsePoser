@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Unity.Mathematics;
+using System;
 
 namespace BVH
 {
@@ -119,6 +120,21 @@ namespace BVH
             }
             Debug.Assert(false, "Not found");
             return false;
+        }
+
+        public Transform GetBoneTransform(HumanBodyBones humanBodyBones)
+        {
+            if (UnityToName(humanBodyBones, out string jointName))
+            {
+                foreach (Transform t in SkeletonTransforms)
+                {
+                    if (t.name == jointName)
+                    {
+                        return t;
+                    }
+                }
+            }
+            return null;
         }
 
         private void OnValidate()

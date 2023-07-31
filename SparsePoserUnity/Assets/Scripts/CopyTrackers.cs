@@ -9,6 +9,7 @@ public class CopyTrackers : MonoBehaviour
 {
     public VRController VR;
     public Transform Root, LFoot, RFoot, Head, LHand, RHand;
+    public Transform C_Root, C_LFoot, C_RFoot, C_Head, C_LHand, C_RHand;
     public bool Record;
     public bool Read;
     public int ReadTargetFramerate = 90;
@@ -49,14 +50,58 @@ public class CopyTrackers : MonoBehaviour
         }
         else
         {
-            if (VR == null || VR.TrackerRightJoint == null) return;
+            if (VR == null) return;
 
-            Root.SetPositionAndRotation(VR.TrackerRootJoint.transform.position, VR.TrackerRootJoint.transform.rotation);
-            LFoot.SetPositionAndRotation(VR.TrackerLeftJoint.transform.position, VR.TrackerLeftJoint.transform.rotation);
-            RFoot.SetPositionAndRotation(VR.TrackerRightJoint.transform.position, VR.TrackerRightJoint.transform.rotation);
-            Head.SetPositionAndRotation(VR.HMDJoint.transform.position, VR.HMDJoint.transform.rotation);
-            LHand.SetPositionAndRotation(VR.ControllerLeftJoint.transform.position, VR.ControllerLeftJoint.transform.rotation);
-            RHand.SetPositionAndRotation(VR.ControllerRightJoint.transform.position, VR.ControllerRightJoint.transform.rotation);
+            if (VR.TrackerRightJoint != null)
+            {
+                if (C_Root.gameObject.activeSelf)
+                {
+                    C_Root.gameObject.SetActive(false);
+                    C_LFoot.gameObject.SetActive(false);
+                    C_RFoot.gameObject.SetActive(false);
+                    C_Head.gameObject.SetActive(false);
+                    C_LHand.gameObject.SetActive(false);
+                    C_RHand.gameObject.SetActive(false);
+                    Root.gameObject.SetActive(true);
+                    LFoot.gameObject.SetActive(true);
+                    RFoot.gameObject.SetActive(true);
+                    Head.gameObject.SetActive(true);
+                    LHand.gameObject.SetActive(true);
+                    RHand.gameObject.SetActive(true);
+                }
+
+                Root.SetPositionAndRotation(VR.TrackerRootJoint.transform.position, VR.TrackerRootJoint.transform.rotation);
+                LFoot.SetPositionAndRotation(VR.TrackerLeftJoint.transform.position, VR.TrackerLeftJoint.transform.rotation);
+                RFoot.SetPositionAndRotation(VR.TrackerRightJoint.transform.position, VR.TrackerRightJoint.transform.rotation);
+                Head.SetPositionAndRotation(VR.HMDJoint.transform.position, VR.HMDJoint.transform.rotation);
+                LHand.SetPositionAndRotation(VR.ControllerLeftJoint.transform.position, VR.ControllerLeftJoint.transform.rotation);
+                RHand.SetPositionAndRotation(VR.ControllerRightJoint.transform.position, VR.ControllerRightJoint.transform.rotation);
+            }
+            else if (C_Root != null)
+            {
+                if (Root.gameObject.activeSelf)
+                {
+                    Root.gameObject.SetActive(false);
+                    LFoot.gameObject.SetActive(false);
+                    RFoot.gameObject.SetActive(false);
+                    Head.gameObject.SetActive(false);
+                    LHand.gameObject.SetActive(false);
+                    RHand.gameObject.SetActive(false);
+                    C_Root.gameObject.SetActive(true);
+                    C_LFoot.gameObject.SetActive(true);
+                    C_RFoot.gameObject.SetActive(true);
+                    C_Head.gameObject.SetActive(true);
+                    C_LHand.gameObject.SetActive(true);
+                    C_RHand.gameObject.SetActive(true);
+                }
+
+                C_Root.SetPositionAndRotation(VR.TrackerRoot.transform.position, VR.TrackerRoot.transform.rotation);
+                C_LFoot.SetPositionAndRotation(VR.TrackerLeft.transform.position, VR.TrackerLeft.transform.rotation);
+                C_RFoot.SetPositionAndRotation(VR.TrackerRight.transform.position, VR.TrackerRight.transform.rotation);
+                C_Head.SetPositionAndRotation(VR.HMD.transform.position, VR.HMD.transform.rotation);
+                C_LHand.SetPositionAndRotation(VR.ControllerLeft.transform.position, VR.ControllerLeft.transform.rotation);
+                C_RHand.SetPositionAndRotation(VR.ControllerRight.transform.position, VR.ControllerRight.transform.rotation);
+            }
 
             if (Record)
             {

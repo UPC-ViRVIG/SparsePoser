@@ -1,3 +1,4 @@
+using BVH;
 using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
@@ -13,7 +14,7 @@ public class VRController : MonoBehaviour
     private static float MAX_HEAD_TO_WAIST_DISTANCE = 0.8f;
 
     public GameObject SteamVRSetup;
-    public GameObject WalkInAvatarPrefab;
+    public SkeletonRenderer Skeleton;
     public bool ComputeOffsetsHands = false;
 
     // SteamVR controllers
@@ -21,17 +22,17 @@ public class VRController : MonoBehaviour
     private SteamVR_Behaviour_Pose SteamVRControllerRight;
 
     // Devices
-    private GameObject HMD;
+    public GameObject HMD { get; private set; }
     public GameObject HMDJoint { get; private set; }
-    private GameObject ControllerLeft;
+    public GameObject ControllerLeft { get; private set; }
     public GameObject ControllerLeftJoint { get; private set; }
-    private GameObject ControllerRight;
+    public GameObject ControllerRight { get; private set; }
     public GameObject ControllerRightJoint { get; private set; }
-    private GameObject TrackerRoot;
+    public GameObject TrackerRoot { get; private set; }
     public GameObject TrackerRootJoint { get; private set; }
-    private GameObject TrackerLeft;
+    public GameObject TrackerLeft { get; private set; }
     public GameObject TrackerLeftJoint { get; private set; }
-    private GameObject TrackerRight;
+    public GameObject TrackerRight { get; private set; }
     public GameObject TrackerRightJoint { get; private set; }
 
     // Mirror
@@ -43,7 +44,6 @@ public class VRController : MonoBehaviour
 
     private uint NumControllerConnected, NumTrackersConnected;
     private int[] TrackerIndices = new int[3];
-    private GameObject WalkInAvatar;
     // Whether the SteamVR controllers have been assigned
     private bool ControllersStarted = false;
     private bool ControllersIdentified = false;
@@ -152,8 +152,9 @@ public class VRController : MonoBehaviour
 
         if (!WalkInAvatarStarted && ControllersStarted && ControllersIdentified)
         {
-            WalkInAvatar = Instantiate(WalkInAvatarPrefab);
-            WalkInAvatar.transform.localPosition = Vector3.zero;
+            Transform hips = Skeleton.GetBoneTransform(HumanBodyBones.Hips);
+            hips.position = new Vector3(0.0f, TrackerRoot.transform.position.y, 0.0f);
+            hips.rotation = Quaternion.Euler(0.0f, 180.0f, 0.0f) * hips.rotation;
             string message1 = "Measures were correctly captured!";
             string message2 = "\n\n\n\n\nSetting up root... Please, stand on a T-pose inside the avatar shown. Press TRIGGER when ready!";
             DisplayMirror.ShowTextAgain(message1, new Color(0.0f, 1.0f, 0.0f, 0.5f), 2, message2, new Color(1.0f, 1.0f, 1.0f, 0.5f), 0, true);
@@ -166,7 +167,6 @@ public class VRController : MonoBehaviour
         {
             SetupJoints();
             FindObjectOfType<TrackersCalibrator>().Calibrate();
-            Destroy(WalkInAvatar);
             WalkInAvatarDone = true;
             enabled = false;
         }
@@ -174,13 +174,12 @@ public class VRController : MonoBehaviour
 
     private void SetupJoints()
     {
-        Animator animator = WalkInAvatar.GetComponentInChildren<Animator>();
-        Transform head = animator.GetBoneTransform(HumanBodyBones.Head);
-        Transform leftHand = animator.GetBoneTransform(HumanBodyBones.LeftHand);
-        Transform rightHand = animator.GetBoneTransform(HumanBodyBones.RightHand);
-        Transform leftToes = animator.GetBoneTransform(HumanBodyBones.LeftToes);
-        Transform rightToes = animator.GetBoneTransform(HumanBodyBones.RightToes);
-        Transform pelvis = animator.GetBoneTransform(HumanBodyBones.Hips);
+        Transform head = Skeleton.GetBoneTransform(HumanBodyBones.Head);
+        Transform leftHand = Skeleton.GetBoneTransform(HumanBodyBones.LeftHand);
+        Transform rightHand = Skeleton.GetBoneTransform(HumanBodyBones.RightHand);
+        Transform leftToes = Skeleton.GetBoneTransform(HumanBodyBones.LeftToes);
+        Transform rightToes = Skeleton.GetBoneTransform(HumanBodyBones.RightToes);
+        Transform pelvis = Skeleton.GetBoneTransform(HumanBodyBones.Hips);
         // Create joints
         HMDJoint = new GameObject("HMDJoint");
         HMDJoint.transform.parent = HMD.transform;
