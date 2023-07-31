@@ -93,20 +93,24 @@ At this stage, your `python/` directory should be organized as follows:
 
 1. Within the ``Project Window``, navigate to ``Assets/Scenes/SampleSceneSimulator``.
 2. Pick a skeleton (a ``.txt`` file) from ``Assets/Data/`` and refer to it in the ``T Pose BVH`` field in the ``PythonCommunication`` component of the Unity scene.
-3. Open a Terminal or Windows PowerShell, go to ``SparsePoser/python/``, activate the virtual environment, and execute the following command: ``python src/unity.py /models/model_xsens/ ../SparsePoserUnity/Assets/Data/male_180_94.txt ik``. Replace ``male_180_94.txt`` with the skeleton selected in step 2.
+    > We provide different skeleton configurations based on real human dimensions. For usability, the skeleton files are named as follows: <gender>_<height>_<hips_height>.
+4. Open a Terminal or Windows PowerShell, go to ``SparsePoser/python/``, activate the virtual environment, and execute the following command: ``python src/unity.py /models/model_xsens/ ../SparsePoserUnity/Assets/Data/male_180_94.txt ik``. Replace ``male_180_94.txt`` with the skeleton selected in step 2.
     > This command facilitates communication between Unity and Python. Note: Repeatedly playing and stopping Unity may disrupt this and result in an error in both Unity and Python. If this occurs, re-execute the Terminal command.
-4. Press ``Play`` in Unity. Manipulate the GameObjects (``Root``, ``LFoot``, ``RFoot``, ``Head``, ``LHand`` and ``RHand``) located within the ``Trackers`` GameObject to adjust the end-effectors.
+5. Press ``Play`` in Unity. Manipulate the GameObjects (``Root``, ``LFoot``, ``RFoot``, ``Head``, ``LHand`` and ``RHand``) located within the ``Trackers`` GameObject to adjust the end-effectors.
     > The initial position and rotation of the trackers are utilized during calibration, so refrain from modifying them.
 
 **Running the Virtual Reality Demo**
 
 1. In the ``Project Window``, select the scene ``Assets/Scenes/SampleSceneVR``.
 2. Choose a skeleton (a ``.txt`` file) from ``Assets/Data/`` and reference it in the ``T Pose BVH`` field in the ``PythonCommunication`` component of the Unity scene.
-3. Open a Terminal or Windows PowerShell, go to ``SparsePoser/python/``, activate the virtual environment, and execute the following command: ``python src/unity.py /models/model_xsens/ ../SparsePoserUnity/Assets/Data/male_180_94.txt ik``. Replace ``male_180_94.txt`` with the skeleton chosen in step 2.
+    > We provide different skeleton configurations based on real human dimensions. For usability, the skeleton files are named as follows: <gender>_<height>_<hips_height>.
+    
+    > Warning: the system may fail when the user dimensions are considerably different from those of the skeleton. Please, choose the closest skeleton to the participant.
+4. Open a Terminal or Windows PowerShell, go to ``SparsePoser/python/``, activate the virtual environment, and execute the following command: ``python src/unity.py /models/model_xsens/ ../SparsePoserUnity/Assets/Data/male_180_94.txt ik``. Replace ``male_180_94.txt`` with the skeleton chosen in step 2.
     > This command facilitates communication between Unity and Python. Note: Repeatedly playing and stopping Unity may disrupt this and result in an error in both Unity and Python. If this occurs, re-execute the Terminal command.
-4. Initiate SteamVR and connect one Head-Mounted Display (HMD), two HTC VIVE hand-held controllers, and three HTC VIVE Trackers 3.0. (Note: Other versions might work but have not been tested.)
-5. Press ``Play`` in Unity.
-6. The first time the application is played, a SteamVR pop-up will appear to generate input actions, select accept. Similarly, a TextMeshPro pop-up will appear, select ``Import TMP Essentials``.
+5. Initiate SteamVR and connect one Head-Mounted Display (HMD), two HTC VIVE hand-held controllers, and three HTC VIVE Trackers 3.0. (Note: Other versions might work but have not been tested.)
+6. Press ``Play`` in Unity.
+7. The first time the application is played, a SteamVR pop-up will appear to generate input actions, select accept. Similarly, a TextMeshPro pop-up will appear, select ``Import TMP Essentials``.
 8. Within the VR environment, locate the mirror. Stand in a T-Pose and press the ``Trigger`` button on any handheld controller.
 9. A yellow skeleton will appear. Position your feet and body within this skeleton and face forward. Aligning hands is not necessary. Press the ``Trigger`` button on any handheld controller once you're in position.
     > If the yellow skeleton doesn't animate within a few seconds, consider restarting Unity or the Terminal executing Python.
