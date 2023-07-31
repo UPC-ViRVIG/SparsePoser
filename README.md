@@ -93,7 +93,7 @@ At this stage, your `python/` directory should be organized as follows:
 
 1. Within the ``Project Window``, navigate to ``Assets/Scenes/SampleSceneSimulator``.
 2. Pick a skeleton (a ``.txt`` file) from ``Assets/Data/`` and refer to it in the ``T Pose BVH`` field in the ``PythonCommunication`` component of the Unity scene.
-3. Open a Terminal or Windows PowerShell, go to ``SparsePoser/python/``, and execute the following command: ``python src/unity.py /models/model_xsens/ ../SparsePoserUnity/Assets/Data/male_180_94.txt ik``. Replace ``male_180_94.txt`` with the skeleton selected in step 2.
+3. Open a Terminal or Windows PowerShell, go to ``SparsePoser/python/``, activate the virtual environment, and execute the following command: ``python src/unity.py /models/model_xsens/ ../SparsePoserUnity/Assets/Data/male_180_94.txt ik``. Replace ``male_180_94.txt`` with the skeleton selected in step 2.
     > This command facilitates communication between Unity and Python. Note: Repeatedly playing and stopping Unity may disrupt this and result in an error in both Unity and Python. If this occurs, re-execute the Terminal command.
 4. Press ``Play`` in Unity. Manipulate the GameObjects (``Root``, ``LFoot``, ``RFoot``, ``Head``, ``LHand`` and ``RHand``) located within the ``Trackers`` GameObject to adjust the end-effectors.
     > The initial position and rotation of the trackers are utilized during calibration, so refrain from modifying them.
@@ -102,7 +102,7 @@ At this stage, your `python/` directory should be organized as follows:
 
 1. In the ``Project Window``, select the scene ``Assets/Scenes/SampleSceneVR``.
 2. Choose a skeleton (a ``.txt`` file) from ``Assets/Data/`` and reference it in the ``T Pose BVH`` field in the ``PythonCommunication`` component of the Unity scene.
-3. Open a Terminal or Windows PowerShell, go to ``SparsePoser/python/``, and execute the following command: ``python src/unity.py /models/model_xsens/ ../SparsePoserUnity/Assets/Data/male_180_94.txt ik``. Replace ``male_180_94.txt`` with the skeleton chosen in step 2.
+3. Open a Terminal or Windows PowerShell, go to ``SparsePoser/python/``, activate the virtual environment, and execute the following command: ``python src/unity.py /models/model_xsens/ ../SparsePoserUnity/Assets/Data/male_180_94.txt ik``. Replace ``male_180_94.txt`` with the skeleton chosen in step 2.
     > This command facilitates communication between Unity and Python. Note: Repeatedly playing and stopping Unity may disrupt this and result in an error in both Unity and Python. If this occurs, re-execute the Terminal command.
 4. Initiate SteamVR and connect one Head-Mounted Display (HMD), two HTC VIVE hand-held controllers, and three HTC VIVE Trackers 3.0. (Note: Other versions might work but have not been tested.)
 5. Press ``Play`` in Unity.
