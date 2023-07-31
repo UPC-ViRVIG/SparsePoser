@@ -30,7 +30,7 @@ Download the paper [here](https://acm.com/TODO)!
 ## Contents
 
 1. [Structure](#structure)
-2. [Quick Start](#quick-start)
+2. [Getting Started](#getting-started)
    * [BVH Evaluation](#bvh-evaluation)
    * [Unity Live Demo](#unity-live-demo)
 3. [Data](#data)
@@ -39,20 +39,22 @@ Download the paper [here](https://acm.com/TODO)!
 6. [License](#license)
 
 
-## Structure
+## Project Architecture
 
-The project is divided into two folders: ``SparsePoserUnity`` with the Unity project, and ``python`` with the network implementation using PyTorch. The network is executed in Python and the results are sent to Unity via a TCP connection.
+The project is structured into two primary directories: `SparsePoserUnity`, which contains the Unity project, and `python`, where the network implementation using PyTorch is located. The network runs in a Python environment, and it communicates with Unity using a TCP connection for result delivery.
 
-## Quick Start
+## Getting Started
 
-1. Clone the repository.
-2. ``cd SparsePoser/python/``
-3. ``python -m venv env`` (tested on Python 3.9).
-4. Active the virtual environment.
-5. ``pip install -r requirements.txt``
-6. Install [PyTorch](https://pytorch.org/get-started/locally/)
-7. Download the [motion dataset](https://zenodo.org/TODO) and unzip it.
-> ``python/`` folder should look like this:
+1. Clone the repository onto your local system.
+2. Navigate to the `python` directory with the command: ``cd SparsePoser/python/``.
+3. Create a virtual environment with: ``python -m venv env`` (Testes on Python 3.9).
+4. Activate the created virtual environment.
+5. Install the necessary packages from the requirements file with: ``pip install -r requirements.txt``.
+6. Download and install [PyTorch](https://pytorch.org/get-started/locally/).
+7. Retrieve the [motion dataset](https://zenodo.org/TODO) and decompress it.
+
+At this stage, your `python/` directory should be organized as follows:
+
 ```
 └───python
     ├───data
@@ -66,54 +68,52 @@ The project is divided into two folders: ``SparsePoserUnity`` with the Unity pro
     └───src
 ```
 
-### BVH Evaluation
+### Evaluating BVH Files
 
-1. ``python src/eval.py models/model_xsens/ data/xsens/eval/S02_A04.bvh ik``
-> You can try to synthesize motion from any other .bvh file in the .\data\xsens\ folder.
-
-> Change ``ik`` by ``generator`` to synthesize motion only using the generator network.
-2. The result will be saved in ``data/eval_S02_A04.bvh``
+1. Use the following command to evaluate BVH files: ``python src/eval.py models/model_xsens/ data/xsens/eval/S02_A04.bvh ik``.
+    > Feel free to synthesize motion from any other .bvh file in the `.\data\xsens\` directory.
+    
+    > Replace ``ik`` with ``generator`` to exclusively synthesize motion using the generator network.
+2. The output will be stored in ``data/eval_S02_A04.bvh``.
 
 ### Unity Live Demo
 
-**Installation**
+**Installation Process**
 
-1. Install **Unity 2021.2.13f1** (other versions may work but are not tested).
-2. Open the Unity Hub application, click ``Open`` and select ``SparsePoser/SparsePoserUnity/``
-> Unity will warn that the project contains some compilation errors. Click ``Ignore`` for now.
+1. Download and install Unity 2021.2.13f1. (Note: Other versions may work but have not been tested.)
+2. Launch the Unity Hub application. Select ``Open`` and navigate to ``SparsePoser/SparsePoserUnity/``.
+    > Upon opening, Unity may issue a warning about compilation errors in the project. Please select ``Ignore`` to proceed. Unity should handle the dependencies automatically, with the exception of SteamVR.
 
-> At this point, Unity should manage the dependencies automatically, except SteamVR which we will install next.
-3. Import SteamVR from the Asset Store: https://assetstore.unity.com/packages/tools/integration/steamvr-plugin-32647
-  (When importing SteamVR, Unity should automatically set up the project for its use in VR and install OpenVR).
-> All errors should have been resolved at this point. The console should be empty.
+3. Import SteamVR from the Asset Store using the following link: [SteamVR Plugin](https://assetstore.unity.com/packages/tools/integration/steamvr-plugin-32647).
+    > Unity should configure the project for VR use and install OpenVR during the import of SteamVR. Any previously encountered errors should be resolved at this stage and the console should be clear.
 
-**Run Simulator**
+**Running the Simulator**
 
-1. In the ``Project Window`` select the scene ``Assets/Scenes/SampleSceneSimulator``
-2. Choose an skeleton (a ``.txt`` file) in ``Assets/Data/`` and reference it in the field ``T Pose BVH`` in the ``PythonCommunication`` component of the Unity scene.
-3. Open a Terminal or Windows PowerShell and go to ``SparsePoser/python/`` and execute the following command ``python src/unity.py /models/model_xsens/ ../SparsePoserUnity/Assets/Data/male_180_94.txt ik``. Make sure to change ``male_180_94.txt`` by the skeleton selected in step 2.
-> This command will enable Unity to communicate with Python (in which the system is executed). Warning: When playing and stopping several times Unity, this may stop working and output an error (both in Unity and Python), in this case, just execute the command again in the Terminal.
-4. Press ``Play`` in Unity. Use the GameObjects (``Root``, ``LFoot``, ``RFoot``, ``Head``, ``LHand`` and ``RHand``) inside the ``Trackers`` GameObject to move the end-effectors.
-> The initial position and rotation of the trackers are used during calibration. Do not change them.
+1. Within the ``Project Window``, navigate to ``Assets/Scenes/SampleSceneSimulator``.
+2. Pick a skeleton (a ``.txt`` file) from ``Assets/Data/`` and refer to it in the ``T Pose BVH`` field in the ``PythonCommunication`` component of the Unity scene.
+3. Open a Terminal or Windows PowerShell, go to ``SparsePoser/python/``, and execute the following command: ``python src/unity.py /models/model_xsens/ ../SparsePoserUnity/Assets/Data/male_180_94.txt ik``. Replace ``male_180_94.txt`` with the skeleton selected in step 2.
+    > This command facilitates communication between Unity and Python. Note: Repeatedly playing and stopping Unity may disrupt this and result in an error in both Unity and Python. If this occurs, re-execute the Terminal command.
+4. Press ``Play`` in Unity. Manipulate the GameObjects (``Root``, ``LFoot``, ``RFoot``, ``Head``, ``LHand`` and ``RHand``) located within the ``Trackers`` GameObject to adjust the end-effectors.
+    > The initial position and rotation of the trackers are utilized during calibration, so refrain from modifying them.
 
-**Run Virtual Reality Demo**
+**Running the Virtual Reality Demo**
 
-1. In the ``Project Window`` select the scene ``Assets/Scenes/SampleSceneVR``
-2. Choose an skeleton (a ``.txt`` file) in ``Assets/Data/`` and reference it in the field ``T Pose BVH`` in the ``PythonCommunication`` component of the Unity scene.
-3. Open a Terminal or Windows PowerShell and go to ``SparsePoser/python/`` and execute the following command ``python src/unity.py /models/model_xsens/ ../SparsePoserUnity/Assets/Data/male_180_94.txt ik``. Make sure to change ``male_180_94.txt`` by the skeleton selected in step 2.
-> This command will enable Unity to communicate with Python (in which the system is executed). Warning: When playing and stopping several times Unity, this may stop working and output an error (both in Unity and Python), in this case, just execute the command again in the Terminal.
-4. Open SteamVR and connect one HMD, two HTC VIVE hand-held controllers, and three HTC VIVE Trackers 3.0 (other versions are not tested but may work).
+1. In the ``Project Window``, select the scene ``Assets/Scenes/SampleSceneVR``.
+2. Choose a skeleton (a ``.txt`` file) from ``Assets/Data/`` and reference it in the ``T Pose BVH`` field in the ``PythonCommunication`` component of the Unity scene.
+3. Open a Terminal or Windows PowerShell, go to ``SparsePoser/python/``, and execute the following command: ``python src/unity.py /models/model_xsens/ ../SparsePoserUnity/Assets/Data/male_180_94.txt ik``. Replace ``male_180_94.txt`` with the skeleton chosen in step 2.
+    > This command facilitates communication between Unity and Python. Note: Repeatedly playing and stopping Unity may disrupt this and result in an error in both Unity and Python. If this occurs, re-execute the Terminal command.
+4. Initiate SteamVR and connect one Head-Mounted Display (HMD), two HTC VIVE hand-held controllers, and three HTC VIVE Trackers 3.0. (Note: Other versions might work but have not been tested.)
 5. Press ``Play`` in Unity.
-6. Within VR, look at the mirror, and while in T-Pose press the ``Trigger`` button of any hand-held controller.
-7. A yellow skeleton should appear, place your feet and body inside the skeleton, and look forward. Hands are not required to be aligned. Press ``Trigger`` button of any hand-held controller when ready.
-> If the yellow skeleton is not animated after a few seconds, it may be necessary to restart Unity or the Terminal executing Python.
+6. Within the VR environment, locate the mirror. Stand in a T-Pose and press the ``Trigger`` button on any handheld controller.
+7. A yellow skeleton will appear. Position your feet and body within this skeleton and face forward. Aligning hands is not necessary. Press the ``Trigger`` button on any handheld controller once you're in position.
+    > If the yellow skeleton doesn't animate within a few seconds, consider restarting Unity or the Terminal executing Python.
 
-### Training
+### Training Procedure
 
-1. [Optional] Adjust hyperparameters in ``src/train.py`` param dictionary.
-2. ``python src/train.py data/xsens/ train_test all``
-> ``python src/train.py <train_db> <name> <generator|ik|all>
-3. The result will be saved in ``models/model_<name>_<train_db>
+1. [Optional] If needed, modify the hyperparameters in the `src/train.py` parameter dictionary.
+2. Initiate the training process with the following command: ``python src/train.py data/xsens/ train_test all``.
+    > The syntax for the command is as follows: ``python src/train.py <train_db> <name> <generator|ik|all>``
+3. The training outcome will be stored in the following directory: ``models/model_<name>_<train_db>``.
 
 ## Data
 
