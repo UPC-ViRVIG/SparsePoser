@@ -87,9 +87,18 @@ The project is divided into two folders: ``SparsePoserUnity`` with the Unity pro
   (When importing SteamVR, Unity should automatically set up the project for its use in VR and install OpenVR).
 > All errors should have been resolved at this point. The console should be empty.
 
-**Run**
+**Run Simulator**
 
-4. In the ``Project Window`` select the scene ``Assets/Scenes/SampleSceneVR``
+1. In the ``Project Window`` select the scene ``Assets/Scenes/SampleSceneSimulator``
+
+**Run Virtual Reality Demo**
+
+1. In the ``Project Window`` select the scene ``Assets/Scenes/SampleSceneVR``
+2. Choose an skeleton (a ``.txt`` file) in ``Assets/Data/`` and reference it in the field ``T Pose BVH`` in the ``PythonCommunication`` component of the Unity scene.
+3. Open a Terminal or Windows PowerShell and go to ``SparsePoser/python/`` and execute the following command ``python src/unity.py /models/model_xsens/ ../SparsePoserUnity/Assets/Data/male_180_94.txt ik``. Make sure to change ``male_180_94.txt`` by the skeleton selected in step 2.
+> This command will enable Unity to communicate with Python (in which the system is executed). Warning: When playing and stopping several times Unity, this may stop working and output an error (both in Unity and Python), in this case, just execute the command again in the Terminal.
+4. Press ``Play`` in Unity. Use the GameObjects (``Root``, ``LFoot``, ``RFoot``, ``Head``, ``LHand`` and ``RHand``) inside the ``Trackers`` GameObject to move the end-effectors.
+> The initial position and rotation of the trackers is used during the calibration state. Do not change it.
 
 ### Training
 
