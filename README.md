@@ -32,7 +32,7 @@ Download the paper [here](https://acm.com/TODO)!
 1. [Structure](#structure)
 2. [Quick Start](#quick-start)
    * [BVH Evaluation](#bvh-evaluation)
-   * [Unity Demo](#unity-demo)
+   * [Unity Live Demo](#unity-live-demo)
 3. [Data](#data)
 4. [Training](#training)
 5. [Citation](#citation)
@@ -74,23 +74,22 @@ The project is divided into two folders: ``SparsePoserUnity`` with the Unity pro
 > Change ``ik`` by ``generator`` to synthesize motion only using the generator network.
 2. The result will be saved in ``data/eval_S02_A04.bvh``
 
-### Unity Demo
+### Unity Live Demo
 
-**Unity** (for live demo)
+**Installation**
 
-***Install Unity Demo***
-
-3. Install **Unity 2021.2.13f1** (other versions may work but are not tested).
-4. Open the Unity Hub application, click ``Open`` and select ``SparsePoser/SparsePoserUnity/``
+1. Install **Unity 2021.2.13f1** (other versions may work but are not tested).
+2. Open the Unity Hub application, click ``Open`` and select ``SparsePoser/SparsePoserUnity/``
 > Unity will warn that the project contains some compilation errors. Click ``Ignore`` for now.
 
 > At this point, Unity should manage the dependencies automatically, except SteamVR which we will install next.
-5. Import SteamVR from the Asset Store: https://assetstore.unity.com/packages/tools/integration/steamvr-plugin-32647
+3. Import SteamVR from the Asset Store: https://assetstore.unity.com/packages/tools/integration/steamvr-plugin-32647
   (When importing SteamVR, Unity should automatically set up the project for its use in VR and install OpenVR).
 > All errors should have been resolved at this point. The console should be empty.
 
-***Run Unity Demo***
-6. In the ``Project Window`` select the scene ``Assets/Scenes/SampleSceneVR``
+**Run**
+
+4. In the ``Project Window`` select the scene ``Assets/Scenes/SampleSceneVR``
 
 ### Training
 
