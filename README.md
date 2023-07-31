@@ -106,7 +106,7 @@ At this stage, your `python/` directory should be organized as follows:
     > This command facilitates communication between Unity and Python. Note: Repeatedly playing and stopping Unity may disrupt this and result in an error in both Unity and Python. If this occurs, re-execute the Terminal command.
 4. Initiate SteamVR and connect one Head-Mounted Display (HMD), two HTC VIVE hand-held controllers, and three HTC VIVE Trackers 3.0. (Note: Other versions might work but have not been tested.)
 5. Press ``Play`` in Unity.
-6. The first time a SteamVR pop-up will appear to generate input actions, select accept. Similarly, a TextMeshPro pop-up will appear, select ``Import TMP Essentials``.
+6. The first time the application is played, a SteamVR pop-up will appear to generate input actions, select accept. Similarly, a TextMeshPro pop-up will appear, select ``Import TMP Essentials``.
 8. Within the VR environment, locate the mirror. Stand in a T-Pose and press the ``Trigger`` button on any handheld controller.
 9. A yellow skeleton will appear. Position your feet and body within this skeleton and face forward. Aligning hands is not necessary. Press the ``Trigger`` button on any handheld controller once you're in position.
     > If the yellow skeleton doesn't animate within a few seconds, consider restarting Unity or the Terminal executing Python.
