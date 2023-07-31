@@ -68,27 +68,36 @@ The project is divided into two folders: ``SparsePoserUnity`` with the Unity pro
 
 ### BVH Evaluation
 
-1. ``python .\src\eval.py .\models\model_xsens\ .\data\xsens\eval\S01_A09_3.bvh ik``
+1. ``python src/eval.py models/model_xsens/ data/xsens/eval/S02_A04.bvh ik``
 > You can try to synthesize motion from any other .bvh file in the .\data\xsens\ folder.
 
 > Change ``ik`` by ``generator`` to synthesize motion only using the generator network.
-2. The result will be saved in TODO
+2. The result will be saved in ``data/eval_S02_A04.bvh``
 
 ### Unity Demo
 
 **Unity** (for live demo)
 
-3. Install **Unity 2021.2.13f1** (other versions may work but are not tested).
+***Install Unity Demo***
 
-TODO...
-  - Add instructions to run the demo.
+3. Install **Unity 2021.2.13f1** (other versions may work but are not tested).
+4. Open the Unity Hub application, click ``Open`` and select ``SparsePoser/SparsePoserUnity/``
+> Unity will warn that the project contains some compilation errors. Click ``Ignore`` for now.
+
+> At this point, Unity should manage the dependencies automatically, except SteamVR which we will install next.
+5. Import SteamVR from the Asset Store: https://assetstore.unity.com/packages/tools/integration/steamvr-plugin-32647
+  (When importing SteamVR, Unity should automatically set up the project for its use in VR and install OpenVR).
+> All errors should have been resolved at this point. The console should be empty.
+
+***Run Unity Demo***
+6. In the ``Project Window`` select the scene ``Assets/Scenes/SampleSceneVR``
 
 ### Training
 
-1. [Optional] Adjust hyperparameters in ``python .\src\train.py`` param dictionary.
-2. ``python .\src\train.py .\data\xsens\ train_test all``
-> ``python .\src\train.py <train_db> <name> <generator|ik|all>
-3. The result will be saved in ``models\model_<name>_<train_db>
+1. [Optional] Adjust hyperparameters in ``src/train.py`` param dictionary.
+2. ``python src/train.py data/xsens/ train_test all``
+> ``python src/train.py <train_db> <name> <generator|ik|all>
+3. The result will be saved in ``models/model_<name>_<train_db>
 
 ## Data
 
