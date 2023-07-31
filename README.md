@@ -90,6 +90,11 @@ The project is divided into two folders: ``SparsePoserUnity`` with the Unity pro
 **Run Simulator**
 
 1. In the ``Project Window`` select the scene ``Assets/Scenes/SampleSceneSimulator``
+2. Choose an skeleton (a ``.txt`` file) in ``Assets/Data/`` and reference it in the field ``T Pose BVH`` in the ``PythonCommunication`` component of the Unity scene.
+3. Open a Terminal or Windows PowerShell and go to ``SparsePoser/python/`` and execute the following command ``python src/unity.py /models/model_xsens/ ../SparsePoserUnity/Assets/Data/male_180_94.txt ik``. Make sure to change ``male_180_94.txt`` by the skeleton selected in step 2.
+> This command will enable Unity to communicate with Python (in which the system is executed). Warning: When playing and stopping several times Unity, this may stop working and output an error (both in Unity and Python), in this case, just execute the command again in the Terminal.
+4. Press ``Play`` in Unity. Use the GameObjects (``Root``, ``LFoot``, ``RFoot``, ``Head``, ``LHand`` and ``RHand``) inside the ``Trackers`` GameObject to move the end-effectors.
+> The initial position and rotation of the trackers are used during calibration. Do not change them.
 
 **Run Virtual Reality Demo**
 
@@ -97,8 +102,11 @@ The project is divided into two folders: ``SparsePoserUnity`` with the Unity pro
 2. Choose an skeleton (a ``.txt`` file) in ``Assets/Data/`` and reference it in the field ``T Pose BVH`` in the ``PythonCommunication`` component of the Unity scene.
 3. Open a Terminal or Windows PowerShell and go to ``SparsePoser/python/`` and execute the following command ``python src/unity.py /models/model_xsens/ ../SparsePoserUnity/Assets/Data/male_180_94.txt ik``. Make sure to change ``male_180_94.txt`` by the skeleton selected in step 2.
 > This command will enable Unity to communicate with Python (in which the system is executed). Warning: When playing and stopping several times Unity, this may stop working and output an error (both in Unity and Python), in this case, just execute the command again in the Terminal.
-4. Press ``Play`` in Unity. Use the GameObjects (``Root``, ``LFoot``, ``RFoot``, ``Head``, ``LHand`` and ``RHand``) inside the ``Trackers`` GameObject to move the end-effectors.
-> The initial position and rotation of the trackers is used during the calibration state. Do not change it.
+4. Open SteamVR and connect one HMD, two HTC VIVE hand-held controllers, and three HTC VIVE Trackers 3.0 (other versions are not tested but may work).
+5. Press ``Play`` in Unity.
+6. Within VR, look at the mirror, and while in T-Pose press the ``Trigger`` button of any hand-held controller.
+7. A yellow skeleton should appear, place your feet and body inside the skeleton, and look forward. Hands are not required to be aligned. Press ``Trigger`` button of any hand-held controller when ready.
+> If the yellow skeleton is not animated after a few seconds, it may be necessary to restart Unity or the Terminal executing Python.
 
 ### Training
 
