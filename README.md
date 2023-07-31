@@ -47,7 +47,7 @@ The project is structured into two primary directories: `SparsePoserUnity`, whic
 
 1. Clone the repository onto your local system.
 2. Navigate to the `python` directory with the command: ``cd SparsePoser/python/``.
-3. Create a virtual environment with: ``python -m venv env`` (Testes on Python 3.9).
+3. Create a virtual environment with: ``python -m venv env`` (tested on Python 3.9).
 4. Activate the created virtual environment.
 5. Install the necessary packages from the requirements file with: ``pip install -r requirements.txt``.
 6. Download and install [PyTorch](https://pytorch.org/get-started/locally/).
