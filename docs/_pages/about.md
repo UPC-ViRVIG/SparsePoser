@@ -150,7 +150,7 @@ Citation
 </b></h3>
 <div style="background-color:rgba(0, 0, 0, 0.03); vertical-align: middle; padding:10px 20px;">
 @article {ponton2023sparseposer, <br>
-	journal = {}, <br>
+	journal = {ACM Transactions on Graphics (TOG)}, <br>
 	{% raw %}
 	title = {{SparsePoser: Real-time Full-body Motion Reconstruction from Sparse Data}}, <br>
 	{% endraw %}

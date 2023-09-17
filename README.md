@@ -156,7 +156,7 @@ If you find this code useful for your research, please cite our paper:
 
 ```
 @article {ponton2023sparseposer, <br>
-	journal = {}, <br>
+	journal = {ACM Transactions on Graphics (TOG)}, <br>
 	{% raw %}
 	title = {{SparsePoser: Real-time Full-body Motion Reconstruction from Sparse Data}}, <br>
 	{% endraw %}
