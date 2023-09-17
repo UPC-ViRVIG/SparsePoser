@@ -155,7 +155,18 @@ Data will be released in the following days...
 If you find this code useful for your research, please cite our paper:
 
 ```
-@article{ponton2023sparseposer,
+@article {ponton2023sparseposer, <br>
+	journal = {}, <br>
+	{% raw %}
+	title = {{SparsePoser: Real-time Full-body Motion Reconstruction from Sparse Data}}, <br>
+	{% endraw %}
+	author = {Ponton, Jose Luis and Yun, Haoran and Aristidou, Andreas and Andujar, Carlos and Pelechano, Nuria}, <br>
+	year = {}, <br>
+	volume = {}, <br>
+	number = {}, <br>
+	pages = {}, <br>
+	ISSN = {}, <br>
+	DOI = {} <br>
 }
 ```
 

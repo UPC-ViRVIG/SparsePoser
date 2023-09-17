@@ -11,7 +11,7 @@ permalink: /
 <br>
 
 <div class="img_horizontal_container">
-	<a href="assets/pdf/motion_matching_vr.pdf">
+	<a href="assets/pdf/TODO.pdf">
 	<div class="img-with-text">
 		<img src="assets/img/article_icon.svg" alt="paper" />
 		<p><b>Paper</b></p>
@@ -29,7 +29,7 @@ permalink: /
 		<p><b>Data</b></p>
 	</div>
 	</a>
-	<a href="https://youtu.be/TODO">
+	<a href="https://youtu.be/BAi4KoHtehY">
 	<div class="img-with-text">
 		<img src="assets/img/video_icon.svg" alt="video" />
 		<p><b>Video</b></p>
@@ -136,8 +136,7 @@ Overview Video
 <center>
 <div class="video_wrapper">
 	<iframe frameborder="0" width="100%" height="100%"
-	src="https://www.youtube.com/embed/TODO">
-	#src="https://www.youtube.com/embed/crU9oLX0GnM">
+	src="https://www.youtube.com/embed/BAi4KoHtehY">
 	</iframe>
 </div>
 </center>
