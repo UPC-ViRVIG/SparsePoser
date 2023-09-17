@@ -22,7 +22,7 @@
 
 This repository contains the implementation of the method shown in the paper *SparsePoser: Real-time Full-body Motion Reconstruction from Sparse Data* published at the **ACM Transactions on Graphics**.
 
-Get an overview of the paper by visiting the [project website](https://upc-virvig.github.io/SparsePoser/) or watching the [video](https://www.youtube.com/embed/TODO)!
+Get an overview of the paper by visiting the [project website](https://upc-virvig.github.io/SparsePoser/) or watching the [video](https://youtu.be/BAi4KoHtehY)!
 
 Download the paper [here](https://acm.com/TODO)!
 
@@ -97,12 +97,15 @@ At this stage, your `python/` directory should be organized as follows:
 **Running the Simulator**
 
 1. Within the ``Project Window``, navigate to ``Assets/Scenes/SampleSceneSimulator``.
+
 2. Pick a skeleton (a ``.txt`` file) from ``Assets/Data/`` and refer to it in the ``T Pose BVH`` field in the ``PythonCommunication`` component of the Unity scene.
    
    > We provide different skeleton configurations based on real human dimensions. For usability, the skeleton files are named as follows: ``<gender>_<height>_<hips_height>.txt``.
+
 3. Open a Terminal or Windows PowerShell, go to ``SparsePoser/python/``, activate the virtual environment, and execute the following command: ``python src/unity.py /models/model_xsens/ ../SparsePoserUnity/Assets/Data/male_180_94.txt ik``. Replace ``male_180_94.txt`` with the skeleton selected in step 2.
    
    > This command facilitates communication between Unity and Python. Note: Repeatedly playing and stopping Unity may disrupt this and result in an error in both Unity and Python. If this occurs, re-execute the Terminal command.
+
 4. Press ``Play`` in Unity. Manipulate the GameObjects (``Root``, ``LFoot``, ``RFoot``, ``Head``, ``LHand`` and ``RHand``) located within the ``Trackers`` GameObject to adjust the end-effectors.
    
    > The initial position and rotation of the trackers are utilized during calibration, so refrain from modifying them.
@@ -136,9 +139,11 @@ At this stage, your `python/` directory should be organized as follows:
 ### Training Procedure
 
 1. [Optional] If needed, modify the hyperparameters in the `src/train.py` parameter dictionary.
+
 2. Initiate the training process with the following command: ``python src/train.py data/xsens/ train_test all``.
    
    > The syntax for the command is as follows: ``python src/train.py <train_db> <name> <generator|ik|all>``
+
 3. The training outcome will be stored in the following directory: ``models/model_<name>_<train_db>``.
 
 ## Data
