@@ -30,14 +30,14 @@ Download the paper [here](https://acm.com/TODO)!
 
 ## Contents
 
-1. [Structure](#structure)
+1. [Project Architecture](#project-architecture)
 2. [Getting Started](#getting-started)
-   * [BVH Evaluation](#bvh-evaluation)
+   * [Evaluating BVH Files](#evaluating-bvh-files)
    * [Unity Live Demo](#unity-live-demo)
+   * [Training Procedure](#training-procedure)
 3. [Data](#data)
-4. [Training](#training)
-5. [Citation](#citation)
-6. [License](#license)
+4. [Citation](#citation)
+5. [License](#license)
 
 ## Project Architecture
 
@@ -51,7 +51,7 @@ The project is structured into two primary directories: `SparsePoserUnity`, whic
 4. Activate the created virtual environment.
 5. Install the necessary packages from the requirements file with: ``pip install -r requirements.txt``.
 6. Download and install [PyTorch](https://pytorch.org/get-started/locally/).
-7. Retrieve the [motion dataset](https://zenodo.org/TODO) and decompress it.
+7. Retrieve the [motion dataset](https://drive.google.com/file/d/19jSGYuancdPTOtztT5mNss5zYPlsMB95/view?usp=sharing) and decompress it.
 
 At this stage, your `python/` directory should be organized as follows:
 
