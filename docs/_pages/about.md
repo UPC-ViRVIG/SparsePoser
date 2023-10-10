@@ -11,7 +11,7 @@ permalink: /
 <br>
 
 <div class="img_horizontal_container">
-	<a href="assets/pdf/TODO.pdf">
+	<a href="https://doi.org/10.1145/3625264">
 	<div class="img-with-text">
 		<img src="assets/img/article_icon.svg" alt="paper" />
 		<p><b>Paper</b></p>
@@ -150,16 +150,16 @@ Citation
 </b></h3>
 <div style="background-color:rgba(0, 0, 0, 0.03); vertical-align: middle; padding:10px 20px;">
 @article {ponton2023sparseposer, <br>
-	journal = {ACM Transactions on Graphics (TOG)}, <br>
+	journal = {ACM Trans. Graph.}, <br>
 	{% raw %}
 	title = {{SparsePoser: Real-time Full-body Motion Reconstruction from Sparse Data}}, <br>
 	{% endraw %}
 	author = {Ponton, Jose Luis and Yun, Haoran and Aristidou, Andreas and Andujar, Carlos and Pelechano, Nuria}, <br>
-	year = {}, <br>
+	year = {2023}, <br>
 	volume = {}, <br>
 	number = {}, <br>
 	pages = {}, <br>
-	ISSN = {}, <br>
-	DOI = {} <br>
+	ISSN = {0730-0301}, <br>
+	DOI = {10.1145/3625264} <br>
 }
 </div>

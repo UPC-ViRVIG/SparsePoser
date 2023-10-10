@@ -24,7 +24,7 @@ This repository contains the implementation of the method shown in the paper *Sp
 
 Get an overview of the paper by visiting the [project website](https://upc-virvig.github.io/SparsePoser/) or watching the [video](https://youtu.be/BAi4KoHtehY)!
 
-Download the paper [here](https://acm.com/TODO)!
+Download the paper [here](https://doi.org/10.1145/3625264)!
 
 ---
 
@@ -51,7 +51,7 @@ The project is structured into two primary directories: `SparsePoserUnity`, whic
 4. Activate the created virtual environment.
 5. Install the necessary packages from the requirements file with: ``pip install -r requirements.txt``.
 6. Download and install [PyTorch](https://pytorch.org/get-started/locally/).
-7. Retrieve the [motion dataset](https://drive.google.com/file/d/19jSGYuancdPTOtztT5mNss5zYPlsMB95/view?usp=sharing) and decompress it.
+7. Retrieve the [motion dataset](https://zenodo.org/record/8427980/files/data.zip?download=1) and decompress it.
 
 At this stage, your `python/` directory should be organized as follows:
 
@@ -148,25 +148,24 @@ At this stage, your `python/` directory should be organized as follows:
 
 ## Data
 
-Data will be released in the following days...
+Data used for training can be downloaded from [here](https://zenodo.org/record/8427980/files/data.zip?download=1).
+It contains over **1GB** of high-quality **motion capture data** recorded with an **Xsens Awinda** system.
 
 ## Citation
 
 If you find this code useful for your research, please cite our paper:
 
 ```
-@article {ponton2023sparseposer, <br>
-	journal = {ACM Transactions on Graphics (TOG)}, <br>
-	{% raw %}
-	title = {{SparsePoser: Real-time Full-body Motion Reconstruction from Sparse Data}}, <br>
-	{% endraw %}
-	author = {Ponton, Jose Luis and Yun, Haoran and Aristidou, Andreas and Andujar, Carlos and Pelechano, Nuria}, <br>
-	year = {}, <br>
-	volume = {}, <br>
-	number = {}, <br>
-	pages = {}, <br>
-	ISSN = {}, <br>
-	DOI = {} <br>
+@article {ponton2023sparseposer,
+	journal = {ACM Trans. Graph.},
+	title = {{SparsePoser: Real-time Full-body Motion Reconstruction from Sparse Data}},
+	author = {Ponton, Jose Luis and Yun, Haoran and Aristidou, Andreas and Andujar, Carlos and Pelechano, Nuria},
+	year = {2023},
+	volume = {},
+	number = {},
+	pages = {},
+	ISSN = {0730-0301},
+	DOI = {10.1145/3625264}
 }
 ```
 
