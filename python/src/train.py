@@ -152,79 +152,76 @@ def main(args):
     else:
         best_evaluation = float("inf")
     # Training Loop
-    with torch.autograd.set_detect_anomaly(True):
-        start_time = time.time()
-        for epoch in range(param["epochs"]):
-            avg_train_loss = 0.0
-            for step, (denorm_motion, norm_motion) in enumerate(train_dataloader):
-                # Forward
-                train_data.set_offsets(norm_motion["offsets"], denorm_motion["offsets"])
-                train_data.set_motions(
-                    norm_motion["dqs"],
-                    norm_motion["displacement"],
-                )
-                if args.train_mode & GENERATOR != 0:
-                    generator_model.train()
+    start_time = time.time()
+    for epoch in range(param["epochs"]):
+        avg_train_loss = 0.0
+        for step, (denorm_motion, norm_motion) in enumerate(train_dataloader):
+            # Forward
+            train_data.set_offsets(norm_motion["offsets"], denorm_motion["offsets"])
+            train_data.set_motions(
+                norm_motion["dqs"],
+                norm_motion["displacement"],
+            )
+            if args.train_mode & GENERATOR != 0:
+                generator_model.train()
+            if args.train_mode & GENERATOR != 0 or args.train_mode & IK != 0:
+                res_decoder = generator_model.forward()
+            if args.train_mode & IK != 0:
+                ik_model.train()
+                ik_model.forward(res_decoder)
+            # Loss
+            loss = 0.0
+            if args.train_mode & GENERATOR != 0:
+                loss_generator = generator_model.optimize_parameters()
+                loss = loss_generator.item()
+            if args.train_mode & IK != 0:
+                loss_ik = ik_model.optimize_parameters(res_decoder)
+                loss += loss_ik.item()
+            avg_train_loss += loss
+            # Evaluate & Print
+            if step == len(train_dataloader) - 1:
                 if args.train_mode & GENERATOR != 0 or args.train_mode & IK != 0:
-                    res_decoder = generator_model.forward()
-                if args.train_mode & IK != 0:
-                    ik_model.train()
-                    ik_model.forward(res_decoder)
-                # Loss
-                loss = 0.0
-                if args.train_mode & GENERATOR != 0:
-                    loss_generator = generator_model.optimize_parameters()
-                    loss = loss_generator.item()
-                if args.train_mode & IK != 0:
-                    loss_ik = ik_model.optimize_parameters(res_decoder)
-                    loss += loss_ik.item()
-                avg_train_loss += loss
-                # Evaluate & Print
-                if step == len(train_dataloader) - 1:
-                    if args.train_mode & GENERATOR != 0 or args.train_mode & IK != 0:
-                        results = evaluate_generator(
-                            generator_model, train_data, eval_dataset
-                        )
-                        if args.train_mode & IK != 0:
-                            results_ik = evaluate_ik(
-                                ik_model,
-                                results,
-                                train_data,
-                                eval_dataset,
-                            )
-                            results = results_ik
-                        mpjpe, mpeepe = eval_save_result(
+                    results = evaluate_generator(
+                        generator_model, train_data, eval_dataset
+                    )
+                    if args.train_mode & IK != 0:
+                        results_ik = evaluate_ik(
+                            ik_model,
                             results,
-                            train_dataset.means,
-                            train_dataset.stds,
-                            eval_dir,
-                            device,
-                            save=False,
+                            train_data,
+                            eval_dataset,
                         )
-                        evaluation_loss = mpjpe + mpeepe
-                    # If best, save model
-                    was_best = False
-                    if evaluation_loss < best_evaluation:
-                        save_model(
-                            generator_model
-                            if args.train_mode & GENERATOR != 0
-                            else None,
-                            ik_model if args.train_mode & IK != 0 else None,
-                            train_dataset,
-                            args.name,
-                            train_eval_dir,
+                        results = results_ik
+                    mpjpe, mpeepe = eval_save_result(
+                        results,
+                        train_dataset.means,
+                        train_dataset.stds,
+                        eval_dir,
+                        device,
+                        save=False,
+                    )
+                    evaluation_loss = mpjpe + mpeepe
+                # If best, save model
+                was_best = False
+                if evaluation_loss < best_evaluation:
+                    save_model(
+                        generator_model if args.train_mode & GENERATOR != 0 else None,
+                        ik_model if args.train_mode & IK != 0 else None,
+                        train_dataset,
+                        args.name,
+                        train_eval_dir,
+                    )
+                    best_evaluation = evaluation_loss
+                    was_best = True
+                # Print
+                avg_train_loss /= len(train_dataloader)
+                if args.train_mode & GENERATOR != 0 or args.train_mode & IK != 0:
+                    print(
+                        "Epoch: {} - Train Loss: {:.4f} - Eval Loss: {:.4f} - MPJPE: {:.4f} - MPEEPE: {:.4f}".format(
+                            epoch, avg_train_loss, evaluation_loss, mpjpe, mpeepe
                         )
-                        best_evaluation = evaluation_loss
-                        was_best = True
-                    # Print
-                    avg_train_loss /= len(train_dataloader)
-                    if args.train_mode & GENERATOR != 0 or args.train_mode & IK != 0:
-                        print(
-                            "Epoch: {} - Train Loss: {:.4f} - Eval Loss: {:.4f} - MPJPE: {:.4f} - MPEEPE: {:.4f}".format(
-                                epoch, avg_train_loss, evaluation_loss, mpjpe, mpeepe
-                            )
-                            + ("*" if was_best else "")
-                        )
+                        + ("*" if was_best else "")
+                    )
 
     end_time = time.time()
     print("Training Time:", end_time - start_time)
