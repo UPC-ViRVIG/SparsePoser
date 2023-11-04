@@ -157,15 +157,21 @@ If you find this code useful for your research, please cite our paper:
 
 ```
 @article {ponton2023sparseposer,
-	journal = {ACM Trans. Graph.},
-	title = {{SparsePoser: Real-time Full-body Motion Reconstruction from Sparse Data}},
 	author = {Ponton, Jose Luis and Yun, Haoran and Aristidou, Andreas and Andujar, Carlos and Pelechano, Nuria},
+	title = {SparsePoser: Real-Time Full-Body Motion Reconstruction from Sparse Data},
 	year = {2023},
-	volume = {},
-	number = {},
-	pages = {},
-	ISSN = {0730-0301},
-	DOI = {10.1145/3625264}
+	issue_date = {February 2024},
+	publisher = {Association for Computing Machinery},
+	address = {New York, NY, USA},
+	volume = {43},
+	number = {1},
+	issn = {0730-0301},
+	url = {https://doi.org/10.1145/3625264},
+	doi = {10.1145/3625264},
+	journal = {ACM Trans. Graph.},
+	month = {oct},
+	articleno = {5},
+	numpages = {14}
 }
 ```
 

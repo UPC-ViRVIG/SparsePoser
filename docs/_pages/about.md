@@ -150,16 +150,20 @@ Citation
 </b></h3>
 <div style="background-color:rgba(0, 0, 0, 0.03); vertical-align: middle; padding:10px 20px;">
 @article {ponton2023sparseposer, <br>
-	journal = {ACM Trans. Graph.}, <br>
-	{% raw %}
-	title = {{SparsePoser: Real-time Full-body Motion Reconstruction from Sparse Data}}, <br>
-	{% endraw %}
 	author = {Ponton, Jose Luis and Yun, Haoran and Aristidou, Andreas and Andujar, Carlos and Pelechano, Nuria}, <br>
+	title = {SparsePoser: Real-Time Full-Body Motion Reconstruction from Sparse Data}, <br>
 	year = {2023}, <br>
-	volume = {}, <br>
-	number = {}, <br>
-	pages = {}, <br>
-	ISSN = {0730-0301}, <br>
-	DOI = {10.1145/3625264} <br>
+	issue_date = {February 2024}, <br>
+	publisher = {Association for Computing Machinery}, <br>
+	address = {New York, NY, USA}, <br>
+	volume = {43}, <br>
+	number = {1}, <br>
+	issn = {0730-0301}, <br>
+	url = {https://doi.org/10.1145/3625264}, <br>
+	doi = {10.1145/3625264}, <br>
+	journal = {ACM Trans. Graph.}, <br>
+	month = {oct}, <br>
+	articleno = {5}, <br>
+	numpages = {14} <br>
 }
 </div>
