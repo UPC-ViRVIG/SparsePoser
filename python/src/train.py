@@ -22,7 +22,7 @@ IK = 2
 
 param = {
     "batch_size": 256,
-    "epochs": 500,
+    "epochs": 1,
     "kernel_size_temporal_dim": 15,
     "neighbor_distance": 2,
     "stride_encoder_conv": 2,
@@ -75,14 +75,10 @@ def main(args):
     # Train Files
     for filename in train_files:
         if filename[-4:] == ".bvh":
-            rots, pos, parents, offsets, _ = get_info_from_bvh(
-                get_bvh_from_disk(train_dir, filename)
-            )
+            rots, pos, parents, offsets, _ = get_info_from_bvh(get_bvh_from_disk(train_dir, filename))
             if reference_parents is None:
                 reference_parents = parents.copy()
-            assert (
-                reference_parents == parents
-            )  # make sure all bvh have the same structure
+            assert reference_parents == parents  # make sure all bvh have the same structure
             # Train Dataset
             train_dataset.add_motion(
                 offsets,
@@ -96,12 +92,8 @@ def main(args):
     # Eval Files
     for filename in eval_files:
         if filename[-4:] == ".bvh":
-            rots, pos, parents, offsets, bvh = get_info_from_bvh(
-                get_bvh_from_disk(eval_dir, filename)
-            )
-            assert (
-                reference_parents == parents
-            )  # make sure all bvh have the same structure
+            rots, pos, parents, offsets, bvh = get_info_from_bvh(get_bvh_from_disk(eval_dir, filename))
+            assert reference_parents == parents  # make sure all bvh have the same structure
             # Eval Dataset
             eval_dataset.add_motion(
                 offsets,
@@ -118,9 +110,7 @@ def main(args):
 
     # Create Models
     train_data = Train_Data(device, param)
-    generator_model = Generator_Model(device, param, reference_parents, train_data).to(
-        device
-    )
+    generator_model = Generator_Model(device, param, reference_parents, train_data).to(device)
     if args.train_mode & IK != 0:
         ik_model = IK_Model(device, param, reference_parents, train_data).to(device)
     train_data.set_means(train_dataset.means["dqs"])
@@ -181,9 +171,7 @@ def main(args):
             # Evaluate & Print
             if step == len(train_dataloader) - 1:
                 if args.train_mode & GENERATOR != 0 or args.train_mode & IK != 0:
-                    results = evaluate_generator(
-                        generator_model, train_data, eval_dataset
-                    )
+                    results = evaluate_generator(generator_model, train_data, eval_dataset)
                     if args.train_mode & IK != 0:
                         results_ik = evaluate_ik(
                             ik_model,
@@ -235,9 +223,7 @@ def main(args):
             results_ik = evaluate_ik(ik_model, results, train_data, eval_dataset)
             results = results_ik
 
-        mpjpe, mpeepe = eval_save_result(
-            results, train_dataset.means, train_dataset.stds, eval_dir, device
-        )
+        mpjpe, mpeepe = eval_save_result(results, train_dataset.means, train_dataset.stds, eval_dir, device)
         evaluation_loss = mpjpe + mpeepe
 
     print("Evaluate Loss: {}".format(evaluation_loss))
@@ -252,9 +238,7 @@ def eval_save_result(results, train_means, train_stds, eval_dir, device, save=Tr
     array_mpeepe = np.empty((len(results),))
     for step, (res, bvh, filename) in enumerate(results):
         if save:
-            eval_path, eval_filename = result_to_bvh(
-                res, train_means, train_stds, bvh, filename
-            )
+            eval_path, eval_filename = result_to_bvh(res, train_means, train_stds, bvh, filename)
             # Evaluate Positional Error
             mpjpe, mpeepe = eval_metrics.eval_pos_error(
                 get_bvh_from_disk(eval_dir, filename),
@@ -296,9 +280,7 @@ def load_model(model, model_path, train_data, device):
 
 
 def get_model_paths(name, train_eval_dir):
-    model_name = (
-        "model_" + name + "_" + os.path.basename(os.path.normpath(train_eval_dir))
-    )
+    model_name = "model_" + name + "_" + os.path.basename(os.path.normpath(train_eval_dir))
     model_dir = os.path.join("models", model_name)
     if not os.path.exists(model_dir):
         os.makedirs(model_dir)
@@ -461,7 +443,7 @@ def result_to_bvh(res, means, stds, bvh, filename, save=True):
     if save:
         path = "data"
         filename = "eval_" + filename
-        bvh.save(os.path.join(path, filename), bvh.data)
+        bvh.save(os.path.join(path, filename))
     return path, filename
 
 
