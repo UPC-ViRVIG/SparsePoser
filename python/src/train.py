@@ -22,7 +22,7 @@ IK = 2
 
 param = {
     "batch_size": 256,
-    "epochs": 1,
+    "epochs": 500,
     "kernel_size_temporal_dim": 15,
     "neighbor_distance": 2,
     "stride_encoder_conv": 2,
