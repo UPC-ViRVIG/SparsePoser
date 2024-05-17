@@ -78,7 +78,7 @@ def main(args):
             rots, pos, parents, offsets, _ = get_info_from_bvh(get_bvh_from_disk(train_dir, filename))
             if reference_parents is None:
                 reference_parents = parents.copy()
-            assert reference_parents == parents  # make sure all bvh have the same structure
+            assert np.array_equal(reference_parents, parents)  # make sure all bvh have the same structure
             # Train Dataset
             train_dataset.add_motion(
                 offsets,
@@ -93,7 +93,7 @@ def main(args):
     for filename in eval_files:
         if filename[-4:] == ".bvh":
             rots, pos, parents, offsets, bvh = get_info_from_bvh(get_bvh_from_disk(eval_dir, filename))
-            assert reference_parents == parents  # make sure all bvh have the same structure
+            assert np.array_equal(reference_parents, parents)  # make sure all bvh have the same structure
             # Eval Dataset
             eval_dataset.add_motion(
                 offsets,
@@ -429,7 +429,7 @@ def result_to_bvh(res, means, stds, bvh, filename, save=True):
     dqs = dqs * stds["dqs"].cpu().numpy() + means["dqs"].cpu().numpy()
     # get rotations and translations from dual quatenions
     dqs = dqs.reshape(dqs.shape[0], -1, 8)
-    _, rots = from_root_dual_quat(dqs, np.array(bvh.data["parents"]))
+    _, rots = from_root_dual_quat(dqs, bvh.data["parents"])
     # quaternions to euler
     rot_roder = np.tile(bvh.data["rot_order"], (rots.shape[0], 1, 1))
     rotations = np.degrees(quat.to_euler(rots, order=rot_roder))
@@ -437,8 +437,6 @@ def result_to_bvh(res, means, stds, bvh, filename, save=True):
     # positions
     positions = bvh.data["positions"][: rotations.shape[0]]
     bvh.data["positions"] = positions
-    # save
-    bvh.data["parents"][0] = None  # BVH sets root as None
     path = None
     if save:
         path = "data"
